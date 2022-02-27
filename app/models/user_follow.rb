@@ -7,6 +7,8 @@ class UserFollow < ApplicationRecord
   private
 
   def user_cant_follow_himself
-    errors.add(:followed, 'can\'t follow himself') if follower_id == followed_id
+    if follower_id == followed_id
+      errors.add(:followed, 'can\'t follow himself')
+    end
   end
 end

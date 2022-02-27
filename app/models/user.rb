@@ -7,4 +7,6 @@ class User < ApplicationRecord
             format: {
               with: /\A[a-zA-Z0-9]+\z/,
             }
+
+  has_many :posts
 end

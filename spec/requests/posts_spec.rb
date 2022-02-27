@@ -24,7 +24,7 @@ RSpec.describe "/posts", type: :request do
 
   let(:invalid_attributes) {
     {
-        content: "Quo dolorem recusandae. Vero laborum deleniti. Qui ipsam illum."
+      content: "Quo dolorem recusandae. Vero laborum deleniti. Qui ipsam illum."
     }
   }
 

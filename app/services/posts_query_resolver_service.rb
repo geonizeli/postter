@@ -14,6 +14,7 @@ class PostsQueryResolverService
     scope = Post.all
 
     scope = scope.by_user_follows(current_user) if filter[:scope] == 'follows' && current_user
+    socpe = scope.where(filter[:user_id]) if filter[:user_id]
     scope = filter_by_terms(scope) if filter[:terms]
 
     scope

@@ -1,5 +1,11 @@
 # README
 
+## Setup
+  1. Run setup script (docker) `./scripts/setup`
+  2. Execute seeds rake with `docker-compose run --rm web rails db:seed`
+  3. Start project with `docker-compose up`
+  4. Seed routes documentation `http://localhost:3000/rails/info/routes`
+
 ## Planning
 
 ### Question for the Product Manager

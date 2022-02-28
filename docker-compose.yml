@@ -1,0 +1,41 @@
+version: "3.6"
+
+services:
+  web:
+    image: strider-posterr
+    volumes:
+      - .:/posterr:delegated
+      - gems:/home/posterr:delegated
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432
+    depends_on:
+      - db
+
+    container_name: strider-posterr-web
+    command: >
+      sh -c '
+        bundle check || bundle install &&
+        rm -f tmp/pids/server.pid &&
+        rails s -b 0.0.0.0'
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:11-alpine
+    container_name: strider-posterr-db
+    volumes:
+      - pg-data:/var/lib/postgresql/data:delegated
+      - ./scripts:/scripts:delegated
+      - ./tmp:/tmp:delegated
+    ports:
+      - "5435:5432"
+
+  gems:
+    image: busybox:latest
+    container_name: strider-posterr-gems
+    volumes:
+      - /gems
+
+volumes:
+  gems:
+  pg-data:

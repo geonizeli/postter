@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd $(dirname $(dirname $0))
+
+yellow_text(){
+  echo "`tput setaf 3`$@`tput sgr0`"
+}
+
+green_text(){
+  echo "`tput setaf 2`$@`tput sgr0`"
+}
+
+if [ -f Dockerfile  ]; then
+  docker build --build-arg UID=$UID -t strider-posterr .
+else
+  red_text 'Could not find Dockerfile. Please run this script from the root of the project.'
+  return
+fi
+
+yellow_text 'Preparing the database...'
+docker-compose run --rm web rails db:create db:migrate
+
+green_text 'Everything ready to run!'

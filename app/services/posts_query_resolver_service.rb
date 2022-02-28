@@ -17,6 +17,10 @@ class PostsQueryResolverService
       scope = scope.by_user_follows(current_user)
     end
 
+    if filter[:terms]
+      scope = scope.by_terms(filter[:terms])
+    end
+
     scope
   end
 end

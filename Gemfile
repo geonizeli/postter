@@ -2,11 +2,12 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.1"
+
 gem "rails", "~> 7.0.2", ">= 7.0.2.2"
 gem "pg", "~> 1.1"
 gem "puma", "~> 5.0"
 gem "jbuilder"
-
+gem "pg_search", "~> 2.3"
 gem "bootsnap", require: false
 
 group :development, :test do
@@ -14,6 +15,5 @@ group :development, :test do
 
   gem "rspec-rails", "~> 5.1"
   gem "factory_bot_rails", "~> 6.2"
+  gem "faker", "~> 2.19"
 end
-
-gem "faker", "~> 2.19"

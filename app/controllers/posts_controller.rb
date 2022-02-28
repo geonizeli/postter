@@ -29,7 +29,7 @@ class PostsController < ApplicationController
   private
 
   def query_params
-    params.permit(:scope) || {}
+    params.permit(:scope, :terms)
   end
 
   def post_params

@@ -1,15 +1,15 @@
 class Post < ApplicationRecord
+  include PgSearch::Model
+
   belongs_to :user
   belongs_to :quoted_post, optional: true, class_name: 'Post'
 
   validates :content, length: { maximum: 777 }
   validates :content, presence: true, unless: :repost?
-
   validate :user, :limit_of_post_per_day
 
-  scope :by_user_follows, ->(user) {
-    where(user_id: user.following_ids)
-  }
+  pg_search_scope :by_terms, against: :content
+  scope :by_user_follows, ->(user) { where(user_id: user.following_ids) }
 
   def repost?
     kind == :quoted_post

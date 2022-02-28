@@ -25,12 +25,16 @@ class PostsQueryResolverService
   def filter_by_terms(scope)
     result = scope.by_terms(filter[:terms])
 
-    posts_with_quotes = result.where.not(quoted_post_id: nil)
     posts_without_quotes = result.where(quoted_post_id: nil)
+    posts_with_quotes = filter_post_that_match_with_quote(result)
 
+    posts_without_quotes.or(posts_with_quotes).order(created_at: :desc)
+  end
+
+  def filter_post_that_match_with_quote(scope)
+    posts_with_quotes = scope.where.not(quoted_post_id: nil)
     quotes_ids = posts_with_quotes.pluck(:quoted_post_id)
-    quoted_posts = Post.where(id: quotes_ids).by_terms(filter[:terms])
 
-    posts_without_quotes.or(quoted_posts).order(created_at: :desc)
+    Post.where(id: quotes_ids).by_terms(filter[:terms])
   end
 end

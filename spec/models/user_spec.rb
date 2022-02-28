@@ -61,4 +61,21 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#is_following?' do
+    it do
+      following_user = create(:user)
+      now_following_user = create(:user)
+      followed_user = create(:user)
+
+      create(:user_follow, follower_id: following_user.id, followed_id: followed_user.id)
+
+      expect(
+        following_user.is_following?(followed_user)
+      ).to be_truthy
+      expect(
+        now_following_user.is_following?(followed_user)
+      ).to be_falsey
+    end
+  end
 end

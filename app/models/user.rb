@@ -14,4 +14,8 @@ class User < ApplicationRecord
   has_many :user_follows_followers, class_name: 'UserFollow', foreign_key: :followed_id
   has_many :following, through: :user_follows_following, source: :followed
   has_many :followers, through: :user_follows_followers, source: :follower
+
+  def is_following?(user)
+    user_follows_following.where(followed_id: user&.id).exists?
+  end
 end

@@ -33,4 +33,32 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  context '#relations' do
+    context 'following' do
+      it do
+        user1 = create(:user)
+        user2 = create(:user)
+        user3 = create(:user)
+
+        create(:user_follow, follower_id: user1.id, followed_id: user2.id)
+        create(:user_follow, follower_id: user3.id, followed_id: user1.id)
+
+        expect(user1.following).to eq([user2])
+      end
+    end
+
+    context 'followers' do
+      it do
+        user1 = create(:user)
+        user2 = create(:user)
+        user3 = create(:user)
+
+        create(:user_follow, follower_id: user1.id, followed_id: user2.id)
+        create(:user_follow, follower_id: user3.id, followed_id: user1.id)
+
+        expect(user1.followers).to eq([user3])
+      end
+    end
+  end
 end

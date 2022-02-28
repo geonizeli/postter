@@ -7,6 +7,10 @@ class Post < ApplicationRecord
 
   validate :user, :limit_of_post_per_day
 
+  scope :by_user_follows, ->(user) {
+    where(user_id: user.following_ids)
+  }
+
   def repost?
     kind == :quoted_post
   end

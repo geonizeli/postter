@@ -1,6 +1,31 @@
 require 'rails_helper'
 
 RSpec.describe Post, type: :model do
+  describe 'scopes' do
+    context '#by_user_follows' do
+      it 'returns only posts from user follows ' do
+        followed_user = create(:user)
+        not_followed_user = create(:user)
+
+        post1 = create(:post, user: followed_user)
+        post2 = create(:post, user: followed_user)
+        create(:post, user: not_followed_user)
+
+        following_user = create(:user)
+        create(
+          :user_follow,
+          follower_id: following_user.id,
+          followed_id: followed_user.id
+        )
+
+        expect(Post.by_user_follows(following_user)).to eq([
+          post1,
+          post2
+        ])
+      end
+    end
+  end
+
   describe '#kind' do
     context 'when post have other post reference and a content' do
       it 'returns :quoted_post' do

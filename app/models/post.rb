@@ -3,29 +3,25 @@ class Post < ApplicationRecord
   belongs_to :quoted_post, optional: true, class_name: 'Post'
 
   validates :content, length: { maximum: 777 }
-  validates :content, presence: true, if: :quoted_post?
+  validates :content, presence: true, unless: :repost?
 
   validate :user, :limit_of_post_per_day
 
+  def repost?
+    kind == :quoted_post
+  end
+
   def kind
-    if quoted_post?
-      :quoted_post
-    elsif repost?
+    if quoted_post_id.blank?
+      :post
+    elsif content.blank? && quoted_post_id.present?
       :repost
     else
-      :post
+      :quoted_post
     end
   end
 
   private
-
-  def quoted_post?
-    content.present? && quoted_post_id
-  end
-
-  def repost?
-    content.blank? && quoted_post_id
-  end
 
   def limit_of_post_per_day
     posts_from_day = user&.posts&.where('created_at >= ?', Time.zone.now.beginning_of_day)

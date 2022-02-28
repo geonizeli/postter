@@ -7,19 +7,19 @@ RSpec.describe "/user_follows", type: :request do
   let(:valid_attributes) {
     {
       followed_id: followed.id,
-      follower_id: follower.id
     }
   }
 
   let(:invalid_attributes) {
     {
-      followed_id: followed.id,
-      follower_id: 'follower.id'
+      followed_id: 'invalid_id',
     }
   }
 
   let(:valid_headers) {
-    {}
+    {
+      Cookie: "user_id=#{follower.id}"
+    }
   }
 
   describe "POST /create" do
@@ -58,7 +58,7 @@ RSpec.describe "/user_follows", type: :request do
 
   describe "DELETE /destroy" do
     it "destroys the requested user_follow" do
-      user_follow = UserFollow.create! valid_attributes
+      user_follow = create(:user_follow, follower: follower, followed: followed)
       expect {
         delete user_follow_url(user_follow), headers: valid_headers, as: :json
       }.to change(UserFollow, :count).by(-1)

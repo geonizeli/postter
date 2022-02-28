@@ -21,6 +21,9 @@ class UserFollowsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def user_follow_params
-    params.require(:user_follow).permit(:follower_id, :followed_id)
+    {
+      follower: current_user,
+      **params.require(:user_follow).permit(:followed_id)
+    }
   end
 end

@@ -5,7 +5,7 @@ RSpec.describe Post, type: :model do
     context 'when post have other post reference and a content' do
       it 'returns :quoted_post' do
         quoted_post = create(:post)
-        post = create(:post, quoted_post: quoted_post)
+        post = build(:post, quoted_post: quoted_post)
 
         expect(post.kind).to eq(:quoted_post)
       end
@@ -14,7 +14,7 @@ RSpec.describe Post, type: :model do
     context 'when post have other post reference and dont have a content' do
       it 'returns :repost' do
         quoted_post = create(:post)
-        post = create(:post, quoted_post: quoted_post, content: nil)
+        post = build(:post, quoted_post: quoted_post, content: nil)
 
         expect(post.kind).to eq(:repost)
       end
@@ -22,7 +22,7 @@ RSpec.describe Post, type: :model do
 
     context 'when post dont have other post reference and have a content' do
       it 'returns :post' do
-        post = create(:post)
+        post = build(:post)
 
         expect(post.kind).to eq(:post)
       end

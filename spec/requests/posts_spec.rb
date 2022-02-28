@@ -13,18 +13,17 @@ require 'rails_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
 RSpec.describe "/posts", type: :request do
-  let(:quoted_post) { create(:post) }
+  let(:user) { create(:user) }
 
   let(:valid_attributes) {
     {
       content: "Quo dolorem recusandae. Vero laborum deleniti. Qui ipsam illum.",
-      user_id: create(:user).id,
     }
   }
 
   let(:invalid_attributes) {
     {
-      content: "Quo dolorem recusandae. Vero laborum deleniti. Qui ipsam illum."
+      content: nil,
     }
   }
 
@@ -33,12 +32,14 @@ RSpec.describe "/posts", type: :request do
   # PostsController, or in your router and rack
   # middleware. Be sure to keep this updated too.
   let(:valid_headers) {
-    {}
+    {
+      Cookie: "user_id=#{user.id}"
+    }
   }
 
   describe "GET /index" do
     it "renders a successful response" do
-      Post.create! valid_attributes
+      create(:post)
       get posts_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
@@ -46,7 +47,7 @@ RSpec.describe "/posts", type: :request do
 
   describe "GET /show" do
     it "renders a successful response" do
-      post = Post.create! valid_attributes
+      post = create(:post)
       get post_url(post), as: :json
       expect(response).to be_successful
     end

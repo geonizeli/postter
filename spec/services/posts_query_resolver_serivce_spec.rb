@@ -33,5 +33,29 @@ RSpec.describe PostsQueryResolverService, type: :service do
         ).to eq([post1, post2])
       end
     end
+
+    context 'when filtering by terms' do
+      it 'returns only posts with terms' do
+        followed_user = create(:user)
+        create(:user_follow, follower_id: current_user.id, followed_id: followed_user.id)
+
+        post1 = create(:post, user_id: followed_user.id, content: 'um')
+        post2 = create(:post, user_id: followed_user.id, content: 'dois')
+        post3 = create(:post, content: 'tres', quoted_post_id: post2.id)
+        post4 = create(:post, content: 'dois', quoted_post_id: post2.id)
+
+        expect(
+          described_class.call({ terms: 'um' }, current_user)
+        ).to eq([post1])
+
+        expect(
+          described_class.call({ terms: 'dois' }, current_user)
+        ).to eq([post2])
+
+        expect(
+          described_class.call({ terms: 'tres' }, current_user)
+        ).to eq([])
+      end
+    end
   end
 end

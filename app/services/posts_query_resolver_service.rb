@@ -13,14 +13,23 @@ class PostsQueryResolverService
   def call
     scope = Post.all
 
-    if filter[:scope] == 'follows' && current_user
-      scope = scope.by_user_follows(current_user)
-    end
-
-    if filter[:terms]
-      scope = scope.by_terms(filter[:terms])
-    end
+    scope = scope.by_user_follows(current_user) if filter[:scope] == 'follows' && current_user
+    scope = filter_by_terms(scope) if filter[:terms]
 
     scope
+  end
+
+  private
+
+  def filter_by_terms(scope)
+    result = scope.by_terms(filter[:terms])
+
+    posts_with_quotes = result.where.not(quoted_post_id: nil)
+    posts_without_quotes = result.where(quoted_post_id: nil)
+
+    quotes_ids = posts_with_quotes.pluck(:quoted_post_id)
+    quoted_posts = Post.where(id: quotes_ids).by_terms(filter[:terms])
+
+    posts_without_quotes.or(quoted_posts).order(created_at: :desc)
   end
 end

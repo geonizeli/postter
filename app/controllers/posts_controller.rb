@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    @posts = PostsQueryResolverService.call(query_params, current_user)
   end
 
   # GET /posts/1
@@ -14,7 +14,10 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
+    @post = Post.new({
+      user: current_user,
+      **post_params
+    })
 
     if @post.save
       render :show, status: :created, location: @post
@@ -25,11 +28,11 @@ class PostsController < ApplicationController
 
   private
 
-  # Only allow a list of trusted parameters through.
+  def query_params
+    params.permit(:scope) || {}
+  end
+
   def post_params
-    {
-      user: current_user,
-      **params.require(:post).permit(:content, :quoted_post_id)
-    }
+    params.require(:post).permit(:content, :quoted_post_id)
   end
 end

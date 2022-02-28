@@ -12,8 +12,6 @@
   3. Add a reply route to post, example `POST /posts/1/replys`, when creating a reply save post with kind
   4. When quering a `reply`, the frontend will concat orignal post owner username with post content
 
-## Self-critique and scaling
-
-  -
-  -
-  -
+## Critique
+  - If I had more time I am certainly using it improve PostsQueryResolverSerivce#filter_by_terms to be more simply, also will give a time to implement cursor based pagination and [json:api specifications](https://jsonapi.org/)
+  - No cache implemented, this could be the first problem, for a social network with this I will certainly migrate the application for GraphQL (with Relay), this will give flexibility to frontend and maybe a mobile developer to only ask what they need, using less bandwidth, and building a consistent frontend side cache. We could use several infras, azure, aws and etc. I would normally choose AWS for ease and convenience, but scope and needs are important in deciding. Considering that we want to be resilient to governments interventions, it would be significant to have an infrastructure of our own.
